@@ -34,12 +34,15 @@ Open to colaboration, submit your commits!
 
 ## To do
 
-A proper workflow translator. 
+A proper workflow translator. Proper documentation and tutorials
 Sequence handling
 
 ## EXR handling
 Check this extension that allows to use exr
 https://github.com/spacepxl/ComfyUI-HQ-Image-Save
+
+## Workflows
+If you want to get some specific workflow translated inside Nuke, lets talk.
 
 ## Coffee
 <a href="https://www.paypal.com/paypalme/MBORGO">Love it? Buy me a coffee</a>
