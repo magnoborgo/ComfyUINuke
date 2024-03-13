@@ -1,0 +1,101 @@
+set cut_paste_input [stack 0]
+version 15.0 v1
+push $cut_paste_input
+push $cut_paste_input
+Group {
+ inputs 2
+ name comfyUI_Nuke
+ onCreate "n = nuke.thisNode()\nn\[\"status\"].setValue(\" \")\nread = nuke.toNode(n.name()+\".Read_result\")\nread\[\"file\"].setValue(\"\")\n\nbvfx_comfyuinuke.get_workflows(n\[\"workflow_list\"])"
+ selected true
+ xpos -408
+ ypos -15
+ cached true
+ addUserKnob {20 User l comfyUI_Nuke}
+ addUserKnob {43 prompt_p l "Prompt (positive)"}
+ prompt_p "burning fire"
+ addUserKnob {43 prompt_n l "Prompt (negative)"}
+ prompt_n abstract
+ addUserKnob {4 workflow_list l Workflow M {basic_workflow_api controlnet_workflow_api img2img}}
+ workflow_list img2img
+ addUserKnob {22 comfyNuke l Execute T "\nif sys.version_info\[0] < 3:\n    reload(bvfx_comfyuinuke)\n    bvfx_comfyuinuke.main(nuke.thisNode())\nelse:\n    import importlib\n    importlib.reload(bvfx_comfyuinuke)\n    bvfx_comfyuinuke.main(nuke.thisNode())\n" +STARTLINE}
+ addUserKnob {20 gparams l "Sampler Parameters" n 1}
+ addUserKnob {3 smp_width l Width:}
+ smp_width 512
+ addUserKnob {3 smp_height l Height: -STARTLINE}
+ smp_height 512
+ addUserKnob {22 set_to_inputformat l "Set to Input Format" t "Warning: big input sizes may crash comfyUI" -STARTLINE T "n = nuke.thisNode()\nif n.input(0) == None:\n    n\[\"smp_width\"].setValue(nuke.root()\['format'].value().width())\n    n\[\"smp_height\"].setValue(nuke.root()\['format'].value().height())\nelse:\n    n\[\"smp_width\"].setValue(n.input(0).width())\n    n\[\"smp_height\"].setValue(n.input(0).height())"}
+ addUserKnob {3 smp_seed l Seed:}
+ smp_seed -1
+ addUserKnob {22 smp_random_seed l "Random Seed" -STARTLINE T "n = nuke.thisNode()\nn\[\"smp_seed\"].setValue(-1)"}
+ addUserKnob {7 smp_cfg l CFG: R 1 10}
+ smp_cfg 8
+ addUserKnob {3 smp_steps l Steps:}
+ smp_steps 10
+ addUserKnob {7 smp_denoise l Denoise:}
+ smp_denoise 1
+ addUserKnob {20 endGroup n -1}
+ addUserKnob {26 ""}
+ addUserKnob {26 status l Status: T " "}
+ addUserKnob {26 ""}
+ addUserKnob {26 bvfxsignature l "" +STARTLINE T "comfyUI_Nuke<span style=\"color:#aaa;font-family:sans-serif;font-size:8pt\"><br>v 0.0.2 created Mar 12 2024, updated Mar 13 2024<br>by <a href=\"https://github.com/magnoborgo/\" style=\"color:#aaa\">Magno Borgo</a>\nBoundary Visual Effects</span>"}
+ addUserKnob {20 configuration l Settings}
+ addUserKnob {1 server_address l "Server Address:"}
+ server_address http://127.0.0.1:8188
+ addUserKnob {2 comfy_directory l "comfyUI Directory"}
+ comfy_directory /Users/mb/Desktop/WORK/ML/ComfyUI/
+}
+ Read {
+  inputs 0
+  file_type png
+  origset true
+  on_error black
+  version 33
+  name Read_result
+  xpos 290
+  ypos -201
+ }
+ Output {
+  name Output1
+  xpos 290
+  ypos -81
+ }
+ Input {
+  inputs 0
+  name mask
+  xpos -40
+  ypos -177
+  number 1
+ }
+ Write {
+  file "\[value parent.comfy_directory]/input/mask.png"
+  file_type png
+  checkHashOnRead false
+  version 2
+  ocioColorspace scene_linear
+  display default
+  view sRGB
+  name Write_source1
+  label "\[value file]"
+  xpos -40
+  ypos 33
+ }
+ Input {
+  inputs 0
+  name source
+  xpos -150
+  ypos -177
+ }
+ Write {
+  file "\[value parent.comfy_directory]/input/source.png"
+  file_type png
+  checkHashOnRead false
+  version 1
+  ocioColorspace scene_linear
+  display default
+  view sRGB
+  name Write_source
+  label "\[value file]"
+  xpos -150
+  ypos -41
+ }
+end_group
