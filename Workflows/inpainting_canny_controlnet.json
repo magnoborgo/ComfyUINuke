@@ -1,9 +1,9 @@
 {
   "3": {
     "inputs": {
-      "seed": 124560193147245,
-      "steps": 20,
-      "cfg": 7,
+      "seed": 243041667093020,
+      "steps": 30,
+      "cfg": 6,
       "sampler_name": "euler",
       "scheduler": "normal",
       "denoise": 1,
@@ -20,7 +20,7 @@
         1
       ],
       "latent_image": [
-        "19",
+        "22",
         0
       ]
     },
@@ -40,7 +40,7 @@
   },
   "6": {
     "inputs": {
-      "text": "a tiger",
+      "text": "blue eyes",
       "clip": [
         "4",
         1
@@ -93,23 +93,13 @@
       "title": "Save Image"
     }
   },
-  "11": {
-    "inputs": {
-      "image": "cat.png",
-      "upload": "image"
-    },
-    "class_type": "LoadImage",
-    "_meta": {
-      "title": "Load Image"
-    }
-  },
   "15": {
     "inputs": {
-      "low_threshold": 100,
-      "high_threshold": 200,
+      "low_threshold": 20,
+      "high_threshold": 80,
       "resolution": 512,
       "image": [
-        "11",
+        "21",
         0
       ]
     },
@@ -154,15 +144,69 @@
       "title": "Apply ControlNet (Advanced)"
     }
   },
-  "19": {
+  "20": {
     "inputs": {
-      "width": 512,
-      "height": 512,
-      "batch_size": 1
+      "pixels": [
+        "21",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
     },
-    "class_type": "EmptyLatentImage",
+    "class_type": "VAEEncode",
     "_meta": {
-      "title": "Empty Latent Image"
+      "title": "VAE Encode"
+    }
+  },
+  "21": {
+    "inputs": {
+      "image": "source.png",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "22": {
+    "inputs": {
+      "samples": [
+        "20",
+        0
+      ],
+      "mask": [
+        "23",
+        0
+      ]
+    },
+    "class_type": "SetLatentNoiseMask",
+    "_meta": {
+      "title": "Set Latent Noise Mask"
+    }
+  },
+  "23": {
+    "inputs": {
+      "image": "mask.png",
+      "channel": "red",
+      "upload": "image"
+    },
+    "class_type": "LoadImageMask",
+    "_meta": {
+      "title": "Load Image (as Mask)"
+    }
+  },
+  "24": {
+    "inputs": {
+      "images": [
+        "15",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
     }
   }
 }
