@@ -1,0 +1,66 @@
+{
+  "9": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "16",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "11": {
+    "inputs": {
+      "image": "",
+      "upload": "image"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "16": {
+    "inputs": {
+      "a": 7.68,
+      "bg_threshold": 0.5,
+      "resolution": 576,
+      "image": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "MiDaS-NormalMapPreprocessor",
+    "_meta": {
+      "title": "MiDaS Normal Map"
+    }
+  },
+  "18": {
+    "inputs": {
+      "resolution": 640,
+      "image": [
+        "11",
+        0
+      ]
+    },
+    "class_type": "BAE-NormalMapPreprocessor",
+    "_meta": {
+      "title": "BAE Normal Map"
+    }
+  },
+  "19": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "18",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}
