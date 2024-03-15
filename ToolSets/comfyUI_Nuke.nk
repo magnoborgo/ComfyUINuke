@@ -2,11 +2,11 @@ set cut_paste_input [stack 0]
 version 15.0 v1
 push $cut_paste_input
 Group {
- name comfyUI_Nuke1
+ name comfyUI_Nuke2
  onCreate "n = nuke.thisNode()\nn\[\"status\"].setValue(\" \")\nbvfx_comfyuinuke.get_workflows(n\[\"workflow_list\"])"
  selected true
- xpos -184
- ypos 162
+ xpos 380
+ ypos 1602
  cached true
  addUserKnob {20 User l ComfyUI_Nuke}
  addUserKnob {43 prompt_p l "Prompt (positive)"}
@@ -56,6 +56,8 @@ Group {
   origset true
   on_error black
   version 37
+  in_colorspace scene_linear
+  out_colorspace scene_linear
   name Read_result
   xpos 290
   ypos -238
@@ -76,7 +78,7 @@ Group {
   xpos 46
   ypos -191
  }
-set N1ff8aa00 [stack 0]
+set Nd4cb3200 [stack 0]
  Dot {
   name Dot2
   note_font_size 30
@@ -89,7 +91,7 @@ set N1ff8aa00 [stack 0]
   xpos -185
   ypos -227
  }
-set N17f89c00 [stack 0]
+set N52ce7800 [stack 0]
  Dot {
   name Dot1
   note_font_size 30
@@ -108,7 +110,7 @@ set N17f89c00 [stack 0]
   xpos 290
   ypos 33
  }
-push $N17f89c00
+push $N52ce7800
  Write {
   file "\[value parent.comfy_directory]/input/source.png"
   file_type png
@@ -123,8 +125,9 @@ push $N17f89c00
   label "\[value file]"
   xpos -185
   ypos -179
+  disable true
  }
-push $N1ff8aa00
+push $Nd4cb3200
  Write {
   file "\[value parent.comfy_directory]/input/mask.png"
   file_type png
@@ -138,6 +141,7 @@ push $N1ff8aa00
   name Write_source1
   label "\[value file]"
   xpos 148
-  ypos -169
+  ypos -167
+  disable true
  }
 end_group

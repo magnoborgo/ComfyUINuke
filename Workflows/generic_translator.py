@@ -21,14 +21,18 @@ def map(prompt,thenode):
             text_prompts[_] = (prompt[_])
             
         if prompt[_]["class_type"] == "LoadImage":
-            write1 = nuke.toNode(thenode.name()+".Write_source")    
-            nuke.execute(write1,nuke.frame(),nuke.frame())
-            prompt[_]["inputs"]["image"]= os.path.basename(write1["file"].getValue())
+            write = nuke.toNode(thenode.name()+".Write_source")  
+            write["disable"].setValue(False)   
+            nuke.execute(write,nuke.frame(),nuke.frame())
+            write["disable"].setValue(True) 
+            prompt[_]["inputs"]["image"]= os.path.basename(write["file"].getValue())
 
         if prompt[_]["class_type"] == "LoadImageMask":
-            write2 = nuke.toNode(thenode.name()+".Write_source1") 
-            nuke.execute(write2,nuke.frame(),nuke.frame()) # render the frame 
-            prompt[_]["inputs"]["image"]= os.path.basename(write2["file"].getValue())
+            write = nuke.toNode(thenode.name()+".Write_source1")
+            write["disable"].setValue(False)  
+            nuke.execute(write,nuke.frame(),nuke.frame()) # render the frame 
+            write["disable"].setValue(True) 
+            prompt[_]["inputs"]["image"]= os.path.basename(write["file"].getValue())
           
 
     textprompt_indexes = sorted(text_prompts.keys())

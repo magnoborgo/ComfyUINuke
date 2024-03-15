@@ -10,9 +10,13 @@ def map(prompt,thenode):
     prompt['7']["inputs"]["text"]= thenode["prompt_n"].getText()
     prompt['19']["inputs"]["height"] = thenode["smp_height"].getValue()
     prompt['19']["inputs"]["width"]= thenode["smp_width"].getValue()
-    write1 = nuke.toNode(thenode.name()+".Write_source")    
-    nuke.execute(write1,nuke.frame(),nuke.frame())
-    prompt['11']["inputs"]["image"]= os.path.basename(write1["file"].getValue())
+
+
+    write = nuke.toNode(thenode.name()+".Write_source")
+    write["disable"].setValue(False)     
+    nuke.execute(write,nuke.frame(),nuke.frame())
+    write["disable"].setValue(True) 
+    prompt['11']["inputs"]["image"]= os.path.basename(write["file"].getValue())
     
 
     return prompt

@@ -11,15 +11,20 @@ def map(prompt,thenode):
     prompt['6']["inputs"]["text"]= thenode["prompt_p"].getText()
     prompt['7']["inputs"]["text"]= thenode["prompt_n"].getText()
     # image input nodes
-    # "class_type": "LoadImageMask",
 
-    write1 = nuke.toNode(thenode.name()+".Write_source")   
-    nuke.execute(write1,nuke.frame(),nuke.frame()) # render the frame 
+    # "class_type": "LoadImageMask",
+    write = nuke.toNode(thenode.name()+".Write_source")   
+    write["disable"].setValue(False)
+    nuke.execute(write,nuke.frame(),nuke.frame()) # render the frame 
+    write["disable"].setValue(True)
     prompt['22']["inputs"]["image"]= os.path.basename(write1["file"].getValue())
+    
     # class_type": "LoadImage"
-    write2 = nuke.toNode(thenode.name()+".Write_source1") 
-    nuke.execute(write2,nuke.frame(),nuke.frame()) # render the frame 
-    prompt['23']["inputs"]["image"]= os.path.basename(write2["file"].getValue())
+    write = nuke.toNode(thenode.name()+".Write_source1") 
+    write["disable"].setValue(False)
+    nuke.execute(write,nuke.frame(),nuke.frame()) # render the frame 
+    write["disable"].setValue(True)
+    prompt['23']["inputs"]["image"]= os.path.basename(write["file"].getValue())
 
 
     return prompt

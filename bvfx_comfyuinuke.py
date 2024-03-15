@@ -14,8 +14,11 @@ else:
     from urllib import request
     import importlib
 
-import generic_translator
-
+try:
+    import generic_translator
+except:
+    pass
+    
 __version__ = "0.0.3"
 __author__ = "Magno Borgo"
 __creation__ = "Mar 12 2024"
