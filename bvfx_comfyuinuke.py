@@ -14,16 +14,20 @@ else:
     from urllib import request
     import importlib
 
+import generic_translator
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 __author__ = "Magno Borgo"
 __creation__ = "Mar 12 2024"
-__date__ = "Mar 13 2024"
+__date__ = "Mar 14 2024"
 __web__ = "www.boundaryvfx.com"
 
 
 log = logging.getLogger(__name__)
 log.info("Loading %s " % os.path.abspath(__file__))
+
+
+IMPORTED_LABEL = "From History (Workflow tab)"
 
 def signature(thenode):
     name = "ComfyUI_Nuke" 
@@ -46,21 +50,49 @@ def check_comfyuidir(dir):
     
     return False
 
-
 def get_workflows(wflow_knob):
+    last_wflow_used = wflow_knob.value()
     wfdir = os.path.dirname(__file__)+'/Workflows/'
     files = glob.glob(wfdir+"*.json")
     #print(wflow_knob)
     wlist = []
     for _ in files:
         wlist.append(os.path.splitext(os.path.basename(_))[0])
-
     wlist = sorted(wlist,reverse=True)
+    wlist.append(IMPORTED_LABEL)
     wflow_knob.setValues(wlist)
-    wflow_knob.setValue("basic_workflow")
-    
+    wflow_knob.setValue(last_wflow_used)   
 
-    #<-------- setup write node -------->
+def live_prompt_importer(thenode):
+    SERVER = thenode["server_address"].getText()
+    try:
+        response=request.urlopen(request.Request(SERVER+"/history"),timeout=5)
+        response = (True,response)
+    except:
+        e = sys.exc_info()
+        text =  "<font color='red'>"+time.strftime('%H:%M:%S') + " Error importing history: "+ str(e[1]).replace("<","").replace(">","")+ "</font>"
+        thenode["status"].setValue(text) 
+        response = (False,e[1])
+
+    if response[0]:
+        history_data= json.loads(response[1].read())
+        if len(history_data) == 0:
+            thenode["status"].setValue(time.strftime('%H:%M:%S')+" Nothing to import, generate a prompt on ComfyUI")  
+        else:
+            thenode["status"].setValue(time.strftime('%H:%M:%S')+" Last prompt imported from history")  
+            log.info(history_data)
+            newer_in_history = 0
+
+            for _ in history_data.keys():
+            
+                log.info(_)
+                log.info(history_data[_]["prompt"][0])
+                if history_data[_]["prompt"][0] > newer_in_history:
+                    newer_in_history = history_data[_]["prompt"][0]
+                    promptid = _ 
+            log.info(history_data[promptid]["prompt"][2])
+            thenode["prompt_i"].setValue(str(history_data[promptid]["prompt"][2]).replace("\'", "\"")) #json double string thing error
+            thenode["workflow_list"].setValue(IMPORTED_LABEL)
 
 
 
@@ -76,22 +108,54 @@ def main(thenode):
     wflow_knob=thenode["workflow_list"].value()
 
 
+    if wflow_knob == IMPORTED_LABEL and len(thenode["prompt_i"].value()) <= 0:
+        nuke.message("From History is empty - Nothing imported, choose a valid Workflow")
+        return
 
     #<------dynamic workflow importer ------->
-    f = open(os.path.dirname(__file__)+'/Workflows/'+wflow_knob+'.json', "r")
-    prompt = json.loads(f.read())
-    f.close()
-    translator = __import__(wflow_knob)
+    if wflow_knob != IMPORTED_LABEL:
 
-    if sys.version_info[0] < 3:
-        reload(translator)
-    else:
-        importlib.reload(translator)
+        f = open(os.path.dirname(__file__)+'/Workflows/'+wflow_knob+'.json', "r")
+        prompt = json.loads(f.read())
+        f.close()
 
+        # check if prompt is in API format
+        if "last_node_id" in prompt.keys():
+            nuke.message("Wrong format for the workflow, use Save (API format), Enable Dev mode Options on Comfyui settings")
+            return
+
+        # check if translation exists
+        if not os.path.exists(os.path.dirname(__file__)+'/Workflows/'+wflow_knob+'.py'):
+            nuke.message("Error - Workflow .py translation file doesn't exists")
+            return
+
+        translator = __import__(wflow_knob)
+
+        if sys.version_info[0] < 3:
+            reload(translator)
+        else:
+            importlib.reload(translator)
     #<------dynamic workflow importer end ------->
     
-    prompt = translator.map(prompt,thenode)
-    print(prompt)    
+    if wflow_knob != IMPORTED_LABEL:
+        prompt = translator.map(prompt,thenode)
+    else:
+        try:
+            prompt= json.loads(thenode["prompt_i"].value())
+        except:
+            e = sys.exc_info()
+            nuke.message("Error - Looks like the imported Workflow is malformed")
+            return
+
+        if sys.version_info[0] < 3:
+            reload(generic_translator)
+        else:
+            importlib.reload(generic_translator)
+
+        prompt = generic_translator.map(prompt,thenode)
+
+
+    log.info(prompt)    
     
     reply = queue_prompt(prompt,SERVER)
     outputs=""
@@ -161,3 +225,6 @@ def queue_prompt(prompt,server="http://127.0.0.1:8188"):
 
 if __name__ == '__main__':
     main(nuke.selectedNode())
+
+
+## http://127.0.0.1:8188/object_info/KSampler

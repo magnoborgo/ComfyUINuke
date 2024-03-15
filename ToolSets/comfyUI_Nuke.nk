@@ -1,23 +1,22 @@
 set cut_paste_input [stack 0]
 version 15.0 v1
 push $cut_paste_input
-push $cut_paste_input
 Group {
- inputs 2
- name comfyUI_Nuke
- onCreate "n = nuke.thisNode()\nn\[\"status\"].setValue(\" \")\nread = nuke.toNode(n.name()+\".Read_result\")\nread\[\"file\"].setValue(\"\")\n\nbvfx_comfyuinuke.get_workflows(n\[\"workflow_list\"])"
+ name comfyUI_Nuke11
+ onCreate "n = nuke.thisNode()\nn\[\"status\"].setValue(\" \")\nbvfx_comfyuinuke.get_workflows(n\[\"workflow_list\"])"
  selected true
- xpos -408
- ypos -15
+ xpos -506
+ ypos 720
  cached true
- addUserKnob {20 User l comfyUI_Nuke}
+ addUserKnob {20 User l ComfyUI_Nuke}
  addUserKnob {43 prompt_p l "Prompt (positive)"}
  prompt_p "burning fire"
  addUserKnob {43 prompt_n l "Prompt (negative)"}
  prompt_n abstract
- addUserKnob {4 workflow_list l Workflow M {basic_workflow_api controlnet_workflow_api img2img}}
- workflow_list img2img
- addUserKnob {22 comfyNuke l Execute T "\nif sys.version_info\[0] < 3:\n    reload(bvfx_comfyuinuke)\n    bvfx_comfyuinuke.main(nuke.thisNode())\nelse:\n    import importlib\n    importlib.reload(bvfx_comfyuinuke)\n    bvfx_comfyuinuke.main(nuke.thisNode())\n" +STARTLINE}
+ addUserKnob {4 workflow_list l Workflow M {inpainting_canny_controlnet inpainting img2img controlnet_workflow basic_workflow "From History (Workflow tab)"}}
+ workflow_list basic_workflow
+ addUserKnob {22 load_from_history l "Load from History" t "Load the last prompt from ComfyUI" -STARTLINE T "if sys.version_info\[0] < 3:\n    reload(bvfx_comfyuinuke)\n    bvfx_comfyuinuke.live_prompt_importer(nuke.thisNode())\nelse:\n    import importlib\n    importlib.reload(bvfx_comfyuinuke)\n    bvfx_comfyuinuke.live_prompt_importer(nuke.thisNode())\n"}
+ addUserKnob {22 comfyNuke l "Queue Prompt" t "send the prompt to ComfyUI" T "if sys.version_info\[0] < 3:\n    reload(bvfx_comfyuinuke)\n    bvfx_comfyuinuke.main(nuke.thisNode())\nelse:\n    import importlib\n    importlib.reload(bvfx_comfyuinuke)\n    bvfx_comfyuinuke.main(nuke.thisNode())\n" +STARTLINE}
  addUserKnob {20 gparams l "Sampler Parameters" n 1}
  addUserKnob {3 smp_width l Width:}
  smp_width 512
@@ -28,7 +27,7 @@ Group {
  smp_seed -1
  addUserKnob {22 smp_random_seed l "Random Seed" -STARTLINE T "n = nuke.thisNode()\nn\[\"smp_seed\"].setValue(-1)"}
  addUserKnob {7 smp_cfg l CFG: R 1 10}
- smp_cfg 8
+ smp_cfg 7
  addUserKnob {3 smp_steps l Steps:}
  smp_steps 10
  addUserKnob {7 smp_denoise l Denoise:}
@@ -37,19 +36,25 @@ Group {
  addUserKnob {26 ""}
  addUserKnob {26 status l Status: T " "}
  addUserKnob {26 ""}
- addUserKnob {26 bvfxsignature l "" +STARTLINE T "comfyUI_Nuke<span style=\"color:#aaa;font-family:sans-serif;font-size:8pt\"><br>v 0.0.2 created Mar 12 2024, updated Mar 13 2024<br>by <a href=\"https://github.com/magnoborgo/\" style=\"color:#aaa\">Magno Borgo</a>\nBoundary Visual Effects</span>"}
+ addUserKnob {26 bvfxsignature l "" +STARTLINE T "ComfyUI_Nuke<span style=\"color:#aaa;font-family:sans-serif;font-size:8pt\"><br>v 0.0.3 created Mar 12 2024, updated Mar 14 2024<br>by <a href=\"https://github.com/magnoborgo/\" style=\"color:#aaa\">Magno Borgo</a>\nBoundary Visual Effects</span>"}
+ addUserKnob {20 workflow l Workflow}
+ addUserKnob {20 imported l "Prompt (imported, as API json format)" n 1}
+ imported 0
+ addUserKnob {43 prompt_i l "" t "paste or import from history \nyour .json prompt here (API format)" +STARTLINE}
+ addUserKnob {20 endGroup_1 n -1}
  addUserKnob {20 configuration l Settings}
  addUserKnob {1 server_address l "Server Address:"}
  server_address http://127.0.0.1:8188
  addUserKnob {2 comfy_directory l "comfyUI Directory"}
- comfy_directory /Users/mb/Desktop/WORK/ML/ComfyUI/
 }
  Read {
   inputs 0
   file_type png
   origset true
   on_error black
-  version 33
+  version 34
+  in_colorspace scene_linear
+  out_colorspace scene_linear
   name Read_result
   xpos 290
   ypos -201
@@ -71,6 +76,8 @@ Group {
   file_type png
   checkHashOnRead false
   version 2
+  in_colorspace scene_linear
+  out_colorspace scene_linear
   ocioColorspace scene_linear
   display default
   view sRGB
@@ -90,6 +97,8 @@ Group {
   file_type png
   checkHashOnRead false
   version 1
+  in_colorspace scene_linear
+  out_colorspace scene_linear
   ocioColorspace scene_linear
   display default
   view sRGB
