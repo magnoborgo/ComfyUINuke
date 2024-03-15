@@ -39,9 +39,15 @@ def signature(thenode):
     except Exception:
         pass
 
-def check_comfyuidir(dir):
-    if os.path.exists(dir):
-        if os.path.exists(dir+"main.py"):
+def check_comfyuidir(thenode):
+    directory = thenode["comfy_directory"].getText()
+    log.info(directory)
+    if directory[-1] != "/":
+        thenode["comfy_directory"].setValue(directory+"/")
+        directory+="/"
+
+    if os.path.exists(directory):
+        if os.path.exists(directory+"main.py"):
             return True
         else:
             nuke.message("Found a directory but its not the correct one.\nPlease configure the directory location of comfyUI on the settings")
@@ -94,6 +100,13 @@ def live_prompt_importer(thenode):
             thenode["prompt_i"].setValue(str(history_data[promptid]["prompt"][2]).replace("\'", "\"")) #json double string thing error
             thenode["workflow_list"].setValue(IMPORTED_LABEL)
 
+def import_read(thenode):
+    with nuke.root():
+        
+        inode = nuke.createNode("Read")
+        for _ in ["file","before","after"]:
+            inode[_].setValue(nuke.toNode(thenode.name()+".Read_result")[_].value())
+
 
 
 def main(thenode):
@@ -101,7 +114,7 @@ def main(thenode):
     SERVER = thenode["server_address"].getText()
     comfyUI_DIR = thenode["comfy_directory"].getText()
 
-    if not check_comfyuidir(comfyUI_DIR):
+    if not check_comfyuidir(thenode):
         return
 
     thenode["status"].setValue(" ")
