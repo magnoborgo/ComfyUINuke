@@ -35,11 +35,12 @@ def map(prompt,thenode):
 
     for n, _ in enumerate(sorted(text_prompts.keys())):
         # check for "positive" in the name, otherwise assumes the lower index is the positive prompt
-        if "positive" in text_prompts[_]["_meta"]["title"]:
-            prompt[_]["inputs"]["text"]= thenode["prompt_p"].getText()
-        elif "negative" in text_prompts[_]["_meta"]["title"]: 
-            prompt[_]["inputs"]["text"]= thenode["prompt_n"].getText()
-        else:
+        try:
+            if "positive" in text_prompts[_]["_meta"]["title"]:
+                prompt[_]["inputs"]["text"]= thenode["prompt_p"].getText()
+            elif "negative" in text_prompts[_]["_meta"]["title"]: 
+                prompt[_]["inputs"]["text"]= thenode["prompt_n"].getText()
+        except:
             if n == 0:
                 prompt[_]["inputs"]["text"]= thenode["prompt_p"].getText()
             if n == 1:   
