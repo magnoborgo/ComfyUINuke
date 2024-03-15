@@ -21,6 +21,13 @@ Directory: /wherever/you/installed/ComfyUI/
 
 Save the toolset with your defaults.
 
+
+## Demo
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=p5Z8fSBkCoo" target="_blank"><img src="http://img.youtube.com/vi/p5Z8fSBkCoo/mqdefault.jpg"
+alt="Click to Watch the video" width="240" height="135" border="10" /><br>View the demo on Youtube</a>
+
+
 ## Use
 
 I'm providing 3 basic workflows templates as examples.
