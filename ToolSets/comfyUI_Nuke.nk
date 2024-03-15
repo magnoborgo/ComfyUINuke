@@ -2,11 +2,11 @@ set cut_paste_input [stack 0]
 version 15.0 v1
 push $cut_paste_input
 Group {
- name comfyUI_Nuke2
+ name comfyUI_Nuke1
  onCreate "n = nuke.thisNode()\nn\[\"status\"].setValue(\" \")\nbvfx_comfyuinuke.get_workflows(n\[\"workflow_list\"])"
  selected true
- xpos -286
- ypos 20
+ xpos -184
+ ypos 162
  cached true
  addUserKnob {20 User l ComfyUI_Nuke}
  addUserKnob {43 prompt_p l "Prompt (positive)"}
@@ -53,13 +53,12 @@ Group {
  Read {
   inputs 0
   file_type png
-  file /Users/mb/Desktop/WORK/ML/ComfyUI//output/ComfyUI_00410_.png
   origset true
   on_error black
   version 37
   name Read_result
   xpos 290
-  ypos -242
+  ypos -238
  }
  Input {
   inputs 0
@@ -68,7 +67,16 @@ Group {
   ypos -231
   number 1
  }
-set N1bbe5000 [stack 0]
+ Shuffle {
+  red alpha
+  green alpha
+  blue alpha
+  name Shuffle2
+  label "\[value in] to \[value out]"
+  xpos 46
+  ypos -191
+ }
+set N1ff8aa00 [stack 0]
  Dot {
   name Dot2
   note_font_size 30
@@ -81,7 +89,7 @@ set N1bbe5000 [stack 0]
   xpos -185
   ypos -227
  }
-set N17fefa00 [stack 0]
+set N17f89c00 [stack 0]
  Dot {
   name Dot1
   note_font_size 30
@@ -100,12 +108,14 @@ set N17fefa00 [stack 0]
   xpos 290
   ypos 33
  }
-push $N17fefa00
+push $N17f89c00
  Write {
   file "\[value parent.comfy_directory]/input/source.png"
   file_type png
   checkHashOnRead false
   version 10
+  in_colorspace scene_linear
+  out_colorspace scene_linear
   ocioColorspace scene_linear
   display default
   view sRGB
@@ -114,7 +124,7 @@ push $N17fefa00
   xpos -185
   ypos -179
  }
-push $N1bbe5000
+push $N1ff8aa00
  Write {
   file "\[value parent.comfy_directory]/input/mask.png"
   file_type png
@@ -127,7 +137,7 @@ push $N1bbe5000
   view sRGB
   name Write_source1
   label "\[value file]"
-  xpos 122
-  ypos -192
+  xpos 148
+  ypos -169
  }
 end_group
