@@ -42,9 +42,11 @@ def signature(thenode):
 def check_comfyuidir(thenode):
     directory = thenode["comfy_directory"].getText()
     log.info(directory)
-    if directory[-1] != "/":
-        thenode["comfy_directory"].setValue(directory+"/")
-        directory+="/"
+
+    if len(directory) > 0:
+        if directory[-1] != "/":
+            thenode["comfy_directory"].setValue(directory+"/")
+            directory+="/"
 
     if os.path.exists(directory):
         if os.path.exists(directory+"main.py"):
