@@ -41,8 +41,8 @@ Common error codes and causes:<br><br>
 `[Http Error 400 or 40X] Bad Request`<br> The workflow .json file has something incompatible on it.
 Usually your system has a checkpoint that has another name, ".safetensors" instead of ".ckpt" for example.
 ComfyUI terminal will tell you which parameter is wrong.
-Drag the workflow from the "ComfyUINuke/Workflows" folder into ComfyUI, fix the issue and save the workflow file overwriting the problematic one.
-
+Drag the workflow from the "ComfyUINuke/Workflows" folder into ComfyUI, fix the issue and save the workflow file overwriting the problematic one.<br>
+Do not forget to always save the files with  "Save (API format) " (ConfyUI > Settings > Enable Dev mode Options)
 
 ## Bug report and suggestions
 
