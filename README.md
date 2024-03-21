@@ -33,11 +33,21 @@ alt="Click to Watch the video" width="240" height="135" border="10" /><br>View t
 I'm providing 3 basic workflows templates as examples.
 Workflows must have a "translation.py" to work inside nuke (check Workflows folder)
 
+## Errors
+
+Common error codes and causes:<br><br>
+`[Errno 61] Connection Refused`<br>ComfyUI is not running or wrong network address<br>
+
+`[Http Error 400 or 40X] Bad Request`<br> The workflow .json file has something incompatible on it.
+Usually your system has a checkpoint that has another name, ".safetensors" instead of ".ckpt" for example.
+ComfyUI terminal will tell you which parameter is wrong.
+Drag the workflow from the "ComfyUINuke/Worflows" folder into ComfyUI, fix the issue and save the workflow file overwriting the problematic one.
+
 
 ## Bug report and suggestions
 
 Are welcome, I'm looking for improvement ideas and UI suggestions, new functionalities, etc.
-Open to colaboration, submit your commits!
+Open to colaboration, submit your commits! Submit issues here on Github.
 
 ## To do
 
